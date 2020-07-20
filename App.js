@@ -18,9 +18,11 @@ const Stack = createStackNavigator();
 
 function App() {
   YellowBox.ignoreWarnings(["Setting a timer"]);
+
   // firebase.auth().onAuthStateChanged((user) => {
   //   console.log(user ? user.providerData : "No User App");
   // });
+
   return (
     <>
       <NavigationContainer>
