@@ -17,34 +17,41 @@ class AddWorkplace extends Component {
     email: "",
     password: "",
     workplaceId: "",
+    ref: "",
   };
+  componentDidMount() {
+    const ref = "WP" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    this.setState({ ref });
+  }
 
   onCreate = async () => {
-    const data = await firebase
-      .firestore()
-      .collection("workplaces")
-      .add({ workplaceName: this.state.workplaceName, notices: [] })
-      .then((res) => {
-        // console.log(res.data);
+    try {
+      await firebase.firestore().collection("workplaces").add({
+        workplaceName: this.state.workplaceName,
+        ref: this.state.ref,
+        notices: [],
       });
-    console.log(data);
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(async (userData) => {
-        if (userData) {
-          let userRef = await firebase
-            .firestore()
-            .collection("users")
-            .doc(userData.user.uid);
-          userRef.set({
-            name: this.state.name,
-            email: this.state.email,
-            type: "admin",
-            workPlace: this.state.workplaceName,
-          });
-        }
-      });
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(async (userData) => {
+          if (userData) {
+            let userRef = await firebase
+              .firestore()
+              .collection("users")
+              .doc(userData.user.uid);
+            userRef.set({
+              name: this.state.name,
+              email: this.state.email,
+              type: "admin",
+              workplaceRef: this.state.ref,
+            });
+          }
+        });
+      // Navigation
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   render() {
