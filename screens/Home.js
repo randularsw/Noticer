@@ -13,12 +13,6 @@ export default function Home({ navigation }) {
           source={require("../assets/art.png")}
         />
         <View style={styles.row}>
-          {/* <Input
-            rounded
-            borderless
-            bgColor="lightgrey"
-            placeholder="Reference Code from your Workplace"
-          /> */}
           <Button round size="small" color="red">
             Register
           </Button>

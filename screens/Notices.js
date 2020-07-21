@@ -9,8 +9,9 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+// import { firestore } from "firebase";
 
-class AddWorkplace extends Component {
+class Notices extends Component {
   state = {
     workplaceName: "",
     name: "",
@@ -19,57 +20,10 @@ class AddWorkplace extends Component {
     workplaceId: "",
     ref: "",
   };
-  componentDidMount() {
-    do {
-      this.setRef();
-    } while (this.checkForSimillarRef());
-  }
-
-  checkForSimillarRef() {
-    firebase
-      .firestore()
-      .collection("workplaces")
-      .where("ref", "==", this.state.ref)
-      .get()
-      .then((snapshot) => {
-        if (snapshot.size == 0) {
-          return false;
-        }
-        console.log("t");
-        return true;
-      });
-  }
-
-  setRef() {
-    const ref = "WP" + Math.random().toString(36).substring(2, 8).toUpperCase();
-    this.setState({ ref });
-  }
+  componentDidMount() {}
 
   onCreate = async () => {
     try {
-      await firebase.firestore().collection("workplaces").add({
-        workplaceName: this.state.workplaceName,
-        ref: this.state.ref,
-        notices: [],
-      });
-      await firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(async (userData) => {
-          if (userData) {
-            let userRef = await firebase
-              .firestore()
-              .collection("users")
-              .doc(userData.user.uid);
-            userRef.set({
-              name: this.state.name,
-              email: this.state.email,
-              type: "admin",
-              workplaceRef: this.state.ref,
-            });
-          }
-        });
-      this.props.navigation.navigate("Notices");
     } catch (err) {
       console.log(err);
     }
@@ -110,28 +64,6 @@ class AddWorkplace extends Component {
                     this.setState({ name: text });
                   }}
                 />
-                <Input
-                  borderless
-                  bgColor="#dbdbdb"
-                  color="#2e2e2e"
-                  placeholder="Email Address"
-                  rounded
-                  onChangeText={(text) => {
-                    this.setState({ email: text });
-                  }}
-                />
-                <Input
-                  borderless
-                  bgColor="#dbdbdb"
-                  color="#2e2e2e"
-                  placeholder="Password"
-                  rounded
-                  password
-                  viewPass
-                  onChangeText={(text) => {
-                    this.setState({ password: text });
-                  }}
-                />
                 <Button
                   round
                   size="small"
@@ -152,7 +84,7 @@ class AddWorkplace extends Component {
 export default function (props) {
   const navigation = useNavigation();
 
-  return <AddWorkplace {...props} navigation={navigation} />;
+  return <Notices {...props} navigation={navigation} />;
 }
 
 const styles = StyleSheet.create({
