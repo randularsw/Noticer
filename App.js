@@ -12,37 +12,59 @@ import { Button, Text, Input } from "galio-framework";
 
 const Stack = createStackNavigator();
 
-function App() {
-  YellowBox.ignoreWarnings(["Setting a timer"]);
+class App extends React.Component {
+  state = {
+    user: {},
+  };
+  componentDidMount() {
+    YellowBox.ignoreWarnings(["Setting a timer"]);
 
-  // firebase.auth().onAuthStateChanged((user) => {
-  //   console.log(user ? user.providerData : "No User App");
-  // });
+    firebase.auth().onAuthStateChanged((user) => {
+      this.getUser(user.uid);
+    });
+  }
 
-  return (
-    <>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Add Workplace" component={AddWorkplace} />
-          <Stack.Screen
-            name="Notices"
-            component={Notices}
-            options={{
-              headerRight: () => (
-                <View styles={{ paddingRight: 10 }}>
-                  <Text onPress={() => alert("This is a button!")}>Name </Text>
-                </View>
-              ),
-              headerRightContainerStyle: {
-                paddingRight: 15,
-              },
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </>
-  );
+  getUser(uid) {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          this.setState({ user: snapshot.data() });
+        }
+      });
+  }
+
+  render() {
+    return (
+      <>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Add Workplace" component={AddWorkplace} />
+            <Stack.Screen
+              name="Notices"
+              component={Notices}
+              options={{
+                headerRight: () => (
+                  <View styles={{ paddingRight: 10 }}>
+                    <Text onPress={() => alert("This is a button!")}>
+                      {this.state.user?.name}
+                    </Text>
+                  </View>
+                ),
+                headerRightContainerStyle: {
+                  paddingRight: 15,
+                },
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
