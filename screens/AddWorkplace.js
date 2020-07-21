@@ -35,7 +35,6 @@ class AddWorkplace extends Component {
         if (snapshot.size == 0) {
           return false;
         }
-        console.log("t");
         return true;
       });
   }

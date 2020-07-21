@@ -17,7 +17,7 @@ class Notices extends Component {
   onCreate = async () => {
     try {
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 

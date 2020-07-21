@@ -1,6 +1,6 @@
 // In App.js in a new project
 
-import * as React from "react";
+import React, { Component } from "react";
 import firebase from "./firebase";
 import { View, YellowBox, ImageBackground, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -15,7 +15,7 @@ import Profile from "./screens/Profile";
 
 const Stack = createStackNavigator();
 
-class App extends React.Component {
+class App extends Component {
   state = {
     user: {},
   };
@@ -25,6 +25,9 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.getUser(user?.uid);
+        // console.log("User");
+      } else {
+        // console.log("Anonymous");
       }
     });
   }

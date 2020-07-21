@@ -7,7 +7,9 @@ export default function ProfileLink({ user }) {
   const navigation = useNavigation();
   return (
     <View styles={{ paddingRight: 10 }}>
-      <Text onPress={() => navigation.navigate("Profile")}>{user.name}</Text>
+      <Text color="red" onPress={() => navigation.navigate("Profile")}>
+        {user.name}
+      </Text>
     </View>
   );
 }

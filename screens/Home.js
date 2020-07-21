@@ -1,43 +1,82 @@
-import React from "react";
+import React, { Component } from "react";
 import * as firebase from "firebase";
-import { StyleSheet, View, ImageBackground, Image } from "react-native";
-import { Button, Text, Input } from "galio-framework";
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { Button, Text, Input, Icon } from "galio-framework";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Home({ navigation }) {
-  return (
-    <ImageBackground source={require("../assets/bg.jpg")} style={styles.image}>
-      <View style={styles.container}>
-        <Image
-          style={styles.middleImage}
-          resizeMode="contain"
-          source={require("../assets/art.png")}
-        />
-        <View style={styles.row}>
-          <Button round size="small" color="red">
-            Register
-          </Button>
+class Home extends Component {
+  state = {
+    ref: "",
+  };
+  render() {
+    const { navigation } = this.props;
+    return (
+      <ImageBackground
+        source={require("../assets/bg.jpg")}
+        style={styles.image}
+      >
+        <View style={styles.container}>
+          <Image
+            style={styles.middleImage}
+            resizeMode="contain"
+            source={require("../assets/art.png")}
+          />
+          <Text muted size={13} style={{ marginTop: 20 }}>
+            Join a Workplace
+          </Text>
+          <View style={styles.row}>
+            <Input
+              borderless
+              bgColor="#dbdbdb"
+              color="#2e2e2e"
+              placeholder="Reference Code"
+              rounded
+              onChangeText={(text) => {
+                this.setState({ ref: text });
+              }}
+            />
+            <Button round size="small" color="red">
+              Join
+            </Button>
+          </View>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("Add Workplace")}
+            style={[styles.content, { marginTop: 20 }]}
+          >
+            <>
+              <Text size={16}>Add Your Workplace</Text>
+              <Text color="grey" size={14}>
+                Share work related Notices with your Employees easily.
+              </Text>
+            </>
+          </TouchableOpacity>
+          <Text size={13} muted style={{ marginTop: 50 }}>
+            Already a User?
+          </Text>
           <Button
             round
             size="small"
             color="red"
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => this.props.navigation.navigate("Login")}
           >
             Login
           </Button>
         </View>
-        <View style={styles.content}>
-          <Text
-            style={styles.topLink}
-            size={15}
-            color="red"
-            onPress={() => navigation.navigate("Add Workplace")}
-          >
-            Add Workplace
-          </Text>
-        </View>
-      </View>
-    </ImageBackground>
-  );
+      </ImageBackground>
+    );
+  }
+}
+
+export default function (props) {
+  const navigation = useNavigation();
+
+  return <Home {...props} navigation={navigation} />;
 }
 
 const styles = StyleSheet.create({
@@ -59,18 +98,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   content: {
-    width: "80%",
+    width: "90%",
     marginTop: 15,
-    alignItems: "center",
+    backgroundColor: "#dbdbdb",
+    borderRadius: 20,
+    padding: 15,
+    alignItems: "flex-start",
     justifyContent: "center",
   },
   row: {
     flexDirection: "row",
   },
   middleImage: { width: 250, height: 200 },
-  topLink: {
-    position: "absolute",
-    // top: 10,
-    // right: 25,
-  },
 });
