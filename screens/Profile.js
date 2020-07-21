@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Image,
   ScrollView,
+  Clipboard,
 } from "react-native";
 
 class Profile extends Component {
@@ -66,18 +67,32 @@ class Profile extends Component {
           <ScrollView>
             <View style={styles.innerContainer}>
               {this.state.user?.type == "admin" && (
-                <View style={[styles.content, styles.row]}>
-                  <Text size={20}>{this.state.workplace?.workplaceName}</Text>
-                  <Text
-                    // size={12}
-                    muted
-                    style={{ marginTop: 4, marginLeft: 10 }}
+                <>
+                  <View style={[styles.content, styles.row]}>
+                    <Text muted style={{ marginTop: 4, marginRight: 5 }}>
+                      Admin
+                    </Text>
+                    <Text size={20}>{this.state.workplace?.workplaceName}</Text>
+                  </View>
+                  <View style={[styles.content, styles.row]}>
+                    <Text muted style={{ marginTop: 4, marginRight: 10 }}>
+                      Reference Number
+                    </Text>
+                    <Text size={20}>{this.state.workplace?.ref}</Text>
+                  </View>
+                  <Button
+                    round
+                    size="small"
+                    color="red"
+                    onPress={() => {
+                      Clipboard.setString(this.state.workplace?.ref);
+                    }}
                   >
-                    Admin
-                  </Text>
-                </View>
+                    Copy
+                  </Button>
+                </>
               )}
-              <View style={[styles.content, { marginTop: 50 }]}>
+              <View style={[styles.content, { marginTop: 150 }]}>
                 <Text size={12} muted>
                   FullName
                 </Text>
@@ -139,6 +154,7 @@ const styles = StyleSheet.create({
     // marginTop: 15,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 30,
   },
   row: {
     flexDirection: "row",

@@ -79,8 +79,8 @@ class Home extends Component {
             style={[styles.content, { marginTop: 20 }]}
           >
             <>
-              <Text size={16}>Add Your Workplace</Text>
-              <Text color="grey" size={14}>
+              <Text>Add Your Workplace</Text>
+              <Text color="grey" size={13}>
                 Share work related Notices with your Employees easily.
               </Text>
             </>
