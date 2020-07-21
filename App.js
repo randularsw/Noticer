@@ -10,6 +10,8 @@ import AddWorkplace from "./screens/AddWorkplace";
 import Notices from "./screens/Notices";
 import { Button, Text, Input } from "galio-framework";
 import Login from "./screens/Login";
+import ProfileLink from "./screens/ProfileLink";
+import Profile from "./screens/Profile";
 
 const Stack = createStackNavigator();
 
@@ -21,7 +23,9 @@ class App extends React.Component {
     YellowBox.ignoreWarnings(["Setting a timer"]);
 
     firebase.auth().onAuthStateChanged((user) => {
-      this.getUser(user.uid);
+      if (user) {
+        this.getUser(user?.uid);
+      }
     });
   }
 
@@ -46,18 +50,13 @@ class App extends React.Component {
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Add Workplace" component={AddWorkplace} />
             <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Profile" component={Profile} />
 
             <Stack.Screen
               name="Notices"
               component={Notices}
               options={{
-                headerRight: () => (
-                  <View styles={{ paddingRight: 10 }}>
-                    <Text onPress={() => alert("This is a button!")}>
-                      {this.state.user?.name}
-                    </Text>
-                  </View>
-                ),
+                headerRight: () => <ProfileLink user={this.state.user} />,
                 headerRightContainerStyle: {
                   paddingRight: 15,
                 },
