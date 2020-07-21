@@ -14,6 +14,30 @@ class Home extends Component {
   state = {
     ref: "",
   };
+
+  onJoin() {
+    // console.log(this.checkForRef());
+    // if (this.checkForRef()) {
+    //   console.log("tt");
+    // this.props.navigation.navigate("Join", { ref: this.state.ref });
+    // }
+  }
+
+  // checkForRef() {
+  //   firebase
+  //     .firestore()
+  //     .collection("workplaces")
+  //     .where("ref", "==", this.state.ref)
+  //     .get()
+  //     .then((snapshot) => {
+  //       if (snapshot.size == 1) {
+  //         console.log("t");
+  //         return true;
+  //       }
+  //       return false;
+  //     });
+  // }
+
   render() {
     const { navigation } = this.props;
     return (
@@ -41,7 +65,12 @@ class Home extends Component {
                 this.setState({ ref: text });
               }}
             />
-            <Button round size="small" color="red">
+            <Button
+              round
+              size="small"
+              color="red"
+              onPress={() => this.onJoin()}
+            >
               Join
             </Button>
           </View>

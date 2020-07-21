@@ -12,6 +12,7 @@ import { Button, Text, Input } from "galio-framework";
 import Login from "./screens/Login";
 import ProfileLink from "./screens/ProfileLink";
 import Profile from "./screens/Profile";
+import Join from "./screens/Join";
 
 const Stack = createStackNavigator();
 
@@ -54,6 +55,7 @@ class App extends Component {
             <Stack.Screen name="Add Workplace" component={AddWorkplace} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="Join" component={Join} />
 
             <Stack.Screen
               name="Notices"

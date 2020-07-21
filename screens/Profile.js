@@ -33,22 +33,20 @@ class Profile extends Component {
         if (snapshot.exists) {
           const data = snapshot.data();
           this.setState({ user: data });
-          this.getWorkplace(data.workplaceRef);
+          this.getWorkplace(data.workplaceId);
         }
       });
   }
 
-  getWorkplace(ref) {
+  getWorkplace(id) {
     firebase
       .firestore()
       .collection("workplaces")
-      .where("ref", "==", ref)
+      .doc(id)
       .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          this.setState({ workplace: data });
-        });
+      .then((doc) => {
+        const data = doc.data();
+        this.setState({ workplace: data });
       });
   }
 

@@ -46,11 +46,18 @@ class AddWorkplace extends Component {
 
   onCreate = async () => {
     try {
-      await firebase.firestore().collection("workplaces").add({
-        workplaceName: this.state.workplaceName,
-        ref: this.state.ref,
-        notices: [],
-      });
+      await firebase
+        .firestore()
+        .collection("workplaces")
+        .add({
+          workplaceName: this.state.workplaceName,
+          ref: this.state.ref,
+          notices: [],
+        })
+        .then((data) => {
+          const workplaceId = data.id;
+          this.setState({ workplaceId });
+        });
       await firebase
         .auth()
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
@@ -64,7 +71,7 @@ class AddWorkplace extends Component {
               name: this.state.name,
               email: this.state.email,
               type: "admin",
-              workplaceRef: this.state.ref,
+              workplaceId: this.state.workplaceId,
             });
           }
         });
