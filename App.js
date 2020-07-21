@@ -9,6 +9,7 @@ import Home from "./screens/Home";
 import AddWorkplace from "./screens/AddWorkplace";
 import Notices from "./screens/Notices";
 import { Button, Text, Input } from "galio-framework";
+import Login from "./screens/Login";
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,8 @@ class App extends React.Component {
           <Stack.Navigator initialRouteName="Home">
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Add Workplace" component={AddWorkplace} />
+            <Stack.Screen name="Login" component={Login} />
+
             <Stack.Screen
               name="Notices"
               component={Notices}

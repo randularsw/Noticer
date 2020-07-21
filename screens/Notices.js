@@ -11,15 +11,7 @@ import {
 } from "react-native";
 
 class Notices extends Component {
-  state = {
-    workplaceName: "",
-    name: "",
-    email: "",
-    password: "",
-    workplaceId: "",
-    ref: "",
-    currentUserName: "",
-  };
+  state = {};
   componentDidMount() {}
 
   onCreate = async () => {

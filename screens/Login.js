@@ -10,24 +10,21 @@ import {
   ScrollView,
 } from "react-native";
 
-class Notices extends Component {
+class Login extends Component {
   state = {
-    workplaceName: "",
-    name: "",
     email: "",
     password: "",
-    workplaceId: "",
-    ref: "",
-    currentUserName: "",
   };
   componentDidMount() {}
 
-  onCreate = async () => {
-    try {
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  onLogin() {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .then((res) => {
+        this.props.navigation.navigate("Notices");
+      });
+  }
 
   render() {
     const { navigation } = this.props;
@@ -39,38 +36,37 @@ class Notices extends Component {
         <View style={styles.container}>
           <ScrollView>
             <View style={styles.innerContainer}>
-              <View style={styles.content}>
-                <Text>Workplace</Text>
+              <View style={[styles.content, { marginTop: 50 }]}>
+                <Text>Enter Credentials</Text>
                 <Input
                   borderless
                   bgColor="#dbdbdb"
                   color="#2e2e2e"
-                  placeholder="Workplace Name"
+                  placeholder="Email Address"
                   rounded
                   onChangeText={(text) => {
-                    this.setState({ workplaceName: text });
+                    this.setState({ email: text });
                   }}
                 />
-              </View>
-              <View style={[styles.content, { marginTop: 50 }]}>
-                <Text>Admin</Text>
                 <Input
                   borderless
                   bgColor="#dbdbdb"
                   color="#2e2e2e"
-                  placeholder="Full Name"
+                  placeholder="Password"
+                  password
+                  viewPass
                   rounded
                   onChangeText={(text) => {
-                    this.setState({ name: text });
+                    this.setState({ password: text });
                   }}
                 />
                 <Button
                   round
                   size="small"
                   color="red"
-                  onPress={() => this.onCreate()}
+                  onPress={() => this.onLogin()}
                 >
-                  Create
+                  Login
                 </Button>
               </View>
             </View>
@@ -84,7 +80,7 @@ class Notices extends Component {
 export default function (props) {
   const navigation = useNavigation();
 
-  return <Notices {...props} navigation={navigation} />;
+  return <Login {...props} navigation={navigation} />;
 }
 
 const styles = StyleSheet.create({

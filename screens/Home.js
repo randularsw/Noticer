@@ -16,7 +16,12 @@ export default function Home({ navigation }) {
           <Button round size="small" color="red">
             Register
           </Button>
-          <Button round size="small" color="red">
+          <Button
+            round
+            size="small"
+            color="red"
+            onPress={() => navigation.navigate("Login")}
+          >
             Login
           </Button>
         </View>
