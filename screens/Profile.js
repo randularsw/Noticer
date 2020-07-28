@@ -92,6 +92,16 @@ class Profile extends Component {
                   </Button>
                 </>
               )}
+              {this.state.user?.type == "user" && (
+                <>
+                  <View style={[styles.content, styles.row]}>
+                    <Text muted style={{ marginTop: 4, marginRight: 5 }}>
+                      User
+                    </Text>
+                    <Text size={20}>{this.state.workplace?.workplaceName}</Text>
+                  </View>
+                </>
+              )}
               <View style={[styles.content, { marginTop: 150 }]}>
                 <Text size={12} muted>
                   FullName
