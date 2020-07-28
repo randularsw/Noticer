@@ -84,16 +84,18 @@ class Notices extends Component {
               />
             </View>
           </View>
-          <View style={{ alignItems: "center" }}>
-            <Button
-              round
-              size="small"
-              color="red"
-              onPress={() => this.onCreate()}
-            >
-              New Notice
-            </Button>
-          </View>
+          {this.state.user?.type === "admin" && (
+            <View style={{ alignItems: "center" }}>
+              <Button
+                round
+                size="small"
+                color="red"
+                onPress={() => this.onCreate()}
+              >
+                New Notice
+              </Button>
+            </View>
+          )}
           {/* </View> */}
           {/* </ScrollView> */}
         </View>

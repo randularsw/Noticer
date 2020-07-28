@@ -80,7 +80,7 @@ class AddNotice extends Component {
                   color="red"
                   onPress={() => this.onSend()}
                 >
-                  Seb=nd
+                  Send
                 </Button>
               </View>
             </View>
