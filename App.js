@@ -13,6 +13,7 @@ import Login from "./screens/Login";
 import ProfileLink from "./screens/ProfileLink";
 import Profile from "./screens/Profile";
 import Join from "./screens/Join";
+import AddNotice from "./screens/AddNotice";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,7 @@ class App extends Component {
                 },
               }}
             />
+            <Stack.Screen name="Add Notice" component={AddNotice} />
           </Stack.Navigator>
         </NavigationContainer>
       </>

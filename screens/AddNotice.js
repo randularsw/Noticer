@@ -10,12 +10,32 @@ import {
   ScrollView,
 } from "react-native";
 
-class Notices extends Component {
-  state = {};
+class AddNotice extends Component {
+  state = {
+    title: "",
+    content: "",
+    workplaceId: "",
+  };
   componentDidMount() {}
 
-  onCreate = () => {
-    this.props.navigation.navigate("Add Notice");
+  onCreate = async () => {
+    // try {
+    //   await firebase
+    //     .firestore()
+    //     .collection("workplaces")
+    //     .add({
+    //       title: this.state.title,
+    //       content: this.state.content,
+    //       notices: [],
+    //     })
+    //     .then((data) => {
+    //       const workplaceId = data.id;
+    //       this.setState({ workplaceId });
+    //     });
+    //   this.props.navigation.navigate("Notices");
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   render() {
@@ -29,17 +49,34 @@ class Notices extends Component {
           <ScrollView>
             <View style={styles.innerContainer}>
               <View style={styles.content}>
-                <Text>Notice 1</Text>
-              </View>
-              <View style={styles.content}>
                 <Text>Admin</Text>
+                <Input
+                  borderless
+                  bgColor="#dbdbdb"
+                  color="#2e2e2e"
+                  placeholder="Title"
+                  rounded
+                  onChangeText={(text) => {
+                    this.setState({ title: text });
+                  }}
+                />
+                <Input
+                  borderless
+                  bgColor="#dbdbdb"
+                  color="#2e2e2e"
+                  placeholder="Content"
+                  rounded
+                  onChangeText={(text) => {
+                    this.setState({ content: text });
+                  }}
+                />
                 <Button
                   round
                   size="small"
                   color="red"
                   onPress={() => this.onCreate()}
                 >
-                  New Notice
+                  Create
                 </Button>
               </View>
             </View>
@@ -53,7 +90,7 @@ class Notices extends Component {
 export default function (props) {
   const navigation = useNavigation();
 
-  return <Notices {...props} navigation={navigation} />;
+  return <AddNotice {...props} navigation={navigation} />;
 }
 
 const styles = StyleSheet.create({
