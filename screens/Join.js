@@ -12,39 +12,20 @@ import {
 
 class Join extends Component {
   state = {
-    workplaceName: "",
+    workplace: {},
     name: "",
     email: "",
     password: "",
     workplaceId: "",
-    ref: "",
   };
   componentDidMount() {
-    const { ref } = this.props.route.params;
-    this.setState({ ref });
-    // console.log(this.props.route.params.id);
+    const { workplace } = this.props.route.params;
+    this.setState({ workplace });
   }
 
-  setRef() {
-    const ref = "WP" + Math.random().toString(36).substring(2, 8).toUpperCase();
-    this.setState({ ref });
-  }
-
-  onCreate = async () => {
+  onJoin = async () => {
     try {
-      await firebase
-        .firestore()
-        .collection("workplaces")
-        .add({
-          workplaceName: this.state.workplaceName,
-          ref: this.state.ref,
-          notices: [],
-        })
-        .then((data) => {
-          const workplaceId = data.id;
-          this.setState({ workplaceId });
-        });
-      await firebase
+      firebase
         .auth()
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(async (userData) => {
@@ -56,12 +37,12 @@ class Join extends Component {
             userRef.set({
               name: this.state.name,
               email: this.state.email,
-              type: "admin",
-              workplaceId: this.state.workplaceId,
+              type: "user",
+              workplaceId: this.state.workplace.id,
             });
+            this.props.navigation.navigate("Notices");
           }
         });
-      this.props.navigation.navigate("Notices");
     } catch (err) {
       console.log(err);
     }
@@ -78,20 +59,10 @@ class Join extends Component {
           <ScrollView>
             <View style={styles.innerContainer}>
               <View style={styles.content}>
-                <Text>Workplace</Text>
-                <Input
-                  borderless
-                  bgColor="#dbdbdb"
-                  color="#2e2e2e"
-                  placeholder="Workplace Name"
-                  rounded
-                  onChangeText={(text) => {
-                    this.setState({ workplaceName: text });
-                  }}
-                />
+                <Text muted>Join</Text>
+                <Text size={20}>{this.state.workplace?.workplaceName}</Text>
               </View>
               <View style={[styles.content, { marginTop: 50 }]}>
-                <Text>Admin</Text>
                 <Input
                   borderless
                   bgColor="#dbdbdb"
@@ -128,9 +99,9 @@ class Join extends Component {
                   round
                   size="small"
                   color="red"
-                  onPress={() => this.onCreate()}
+                  onPress={() => this.onJoin()}
                 >
-                  Create
+                  Join
                 </Button>
               </View>
             </View>

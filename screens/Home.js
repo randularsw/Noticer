@@ -23,9 +23,15 @@ class Home extends Component {
       .get()
       .then((snapshot) => {
         if (snapshot.size == 1) {
+          const workplaces = [];
+          snapshot.forEach((d) => {
+            const data = d.data();
+            data.id = d.id;
+            workplaces.push(data);
+          });
           this.props.navigation.navigate("Join", {
             ref: this.state.ref,
-            id: snapshot.id,
+            workplace: workplaces[0],
           });
         }
         return false;
