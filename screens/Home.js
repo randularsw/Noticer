@@ -15,28 +15,22 @@ class Home extends Component {
     ref: "",
   };
 
-  onJoin() {
-    // console.log(this.checkForRef());
-    // if (this.checkForRef()) {
-    //   console.log("tt");
-    // this.props.navigation.navigate("Join", { ref: this.state.ref });
-    // }
+  async onJoin() {
+    firebase
+      .firestore()
+      .collection("workplaces")
+      .where("ref", "==", this.state.ref)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.size == 1) {
+          this.props.navigation.navigate("Join", {
+            ref: this.state.ref,
+            id: snapshot.id,
+          });
+        }
+        return false;
+      });
   }
-
-  // checkForRef() {
-  //   firebase
-  //     .firestore()
-  //     .collection("workplaces")
-  //     .where("ref", "==", this.state.ref)
-  //     .get()
-  //     .then((snapshot) => {
-  //       if (snapshot.size == 1) {
-  //         console.log("t");
-  //         return true;
-  //       }
-  //       return false;
-  //     });
-  // }
 
   render() {
     const { navigation } = this.props;
