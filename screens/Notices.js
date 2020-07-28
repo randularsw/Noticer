@@ -8,7 +8,9 @@ import {
   ImageBackground,
   Image,
   ScrollView,
+  FlatList,
 } from "react-native";
+import { startClock } from "react-native-reanimated";
 
 class Notices extends Component {
   state = {};
@@ -42,7 +44,7 @@ class Notices extends Component {
       .then((doc) => {
         const data = doc.data();
         data.id = doc.id;
-        // console.log(data);
+        console.log(data);
         this.setState({ workplace: data });
       });
   }
@@ -61,24 +63,39 @@ class Notices extends Component {
         style={styles.image}
       >
         <View style={styles.container}>
-          <ScrollView>
-            <View style={styles.innerContainer}>
-              <View style={styles.content}>
-                <Text>Notice 1</Text>
-              </View>
-              <View style={styles.content}>
-                <Text>Admin</Text>
-                <Button
-                  round
-                  size="small"
-                  color="red"
-                  onPress={() => this.onCreate()}
-                >
-                  New Notice
-                </Button>
-              </View>
+          {/* <ScrollView> */}
+          {/* <View style={styles.innerContainer}> */}
+          <View style={styles.content}>
+            <View>
+              <FlatList
+                data={this.state.workplace?.notices}
+                renderItem={({ item }) => (
+                  <View
+                    style={{
+                      alignItems: "flex-start",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    <Text h5>{item.title}</Text>
+                    <Text>{item.content}</Text>
+                  </View>
+                )}
+                keyExtractor={(item) => item.title}
+              />
             </View>
-          </ScrollView>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Button
+              round
+              size="small"
+              color="red"
+              onPress={() => this.onCreate()}
+            >
+              New Notice
+            </Button>
+          </View>
+          {/* </View> */}
+          {/* </ScrollView> */}
         </View>
       </ImageBackground>
     );
@@ -102,11 +119,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 20,
   },
-  innerContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 50,
-  },
+  // innerContainer: {
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   paddingVertical: 50,
+  // },
   image: {
     // flex: 1,
     width: "100%",
@@ -118,8 +135,9 @@ const styles = StyleSheet.create({
   content: {
     width: "80%",
     // marginTop: 15,
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "center",
+    // justifyContent: "center",
+    padding: 20,
   },
   row: {
     flexDirection: "row",
