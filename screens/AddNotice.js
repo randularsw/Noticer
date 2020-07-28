@@ -16,26 +16,30 @@ class AddNotice extends Component {
     content: "",
     workplaceId: "",
   };
-  componentDidMount() {}
+  componentDidMount() {
+    const { workplaceId } = this.props.route.params;
+    this.setState({ workplaceId });
+  }
 
-  onCreate = async () => {
-    // try {
-    //   await firebase
-    //     .firestore()
-    //     .collection("workplaces")
-    //     .add({
-    //       title: this.state.title,
-    //       content: this.state.content,
-    //       notices: [],
-    //     })
-    //     .then((data) => {
-    //       const workplaceId = data.id;
-    //       this.setState({ workplaceId });
-    //     });
-    //   this.props.navigation.navigate("Notices");
-    // } catch (err) {
-    //   console.log(err);
-    // }
+  onSend = async () => {
+    try {
+      await firebase
+        .firestore()
+        .collection("workplaces")
+        .doc(this.state.workplaceId)
+        .update({
+          notices: firebase.firestore.FieldValue.arrayUnion({
+            title: this.state.title,
+            content: this.state.content,
+          }),
+        })
+        .then((data) => {
+          //
+        });
+      this.props.navigation.navigate("Notices");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   render() {
@@ -74,9 +78,9 @@ class AddNotice extends Component {
                   round
                   size="small"
                   color="red"
-                  onPress={() => this.onCreate()}
+                  onPress={() => this.onSend()}
                 >
-                  Create
+                  Seb=nd
                 </Button>
               </View>
             </View>

@@ -31,7 +31,6 @@ class Home extends Component {
             workplaces.push(data);
           });
           this.props.navigation.navigate("Join", {
-            ref: this.state.ref,
             workplace: workplaces[0],
           });
         }

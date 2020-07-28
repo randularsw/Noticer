@@ -12,10 +12,45 @@ import {
 
 class Notices extends Component {
   state = {};
-  componentDidMount() {}
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((snapshot) => {
+            if (snapshot.exists) {
+              const data = snapshot.data();
+              data.id = snapshot.id;
+              // console.log(data);
+              this.setState({ user: data });
+              this.getWorkplace(data.workplaceId);
+            }
+          });
+      }
+    });
+  }
+
+  getWorkplace(id) {
+    firebase
+      .firestore()
+      .collection("workplaces")
+      .doc(id)
+      .get()
+      .then((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        // console.log(data);
+        this.setState({ workplace: data });
+      });
+  }
 
   onCreate = () => {
-    this.props.navigation.navigate("Add Notice");
+    this.props.navigation.navigate("Add Notice", {
+      workplaceId: this.state.workplace?.id,
+    });
   };
 
   render() {
