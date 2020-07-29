@@ -10,7 +10,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import { startClock } from "react-native-reanimated";
+import moment from "moment";
 
 class Notices extends Component {
   state = {};
@@ -44,7 +44,7 @@ class Notices extends Component {
       .then((doc) => {
         const data = doc.data();
         data.id = doc.id;
-        console.log(data);
+        // console.log(data);
         this.setState({ workplace: data });
       });
   }
@@ -55,6 +55,13 @@ class Notices extends Component {
     });
   };
 
+  appendLeadingZeroes(n) {
+    if (n <= 9) {
+      return "0" + n;
+    }
+    return n;
+  }
+
   render() {
     const { navigation } = this.props;
     return (
@@ -64,39 +71,58 @@ class Notices extends Component {
       >
         <View style={styles.container}>
           {/* <ScrollView> */}
-          {/* <View style={styles.innerContainer}> */}
-          <View style={styles.content}>
-            <View>
+          <View style={styles.innerContainer}>
+            <View style={styles.content}>
               <FlatList
                 data={this.state.workplace?.notices}
                 renderItem={({ item }) => (
                   <View
                     style={{
                       alignItems: "flex-start",
-                      justifyContent: "space-around",
+                      paddingVertical: 10,
                     }}
                   >
-                    <Text h5>{item.title}</Text>
-                    <Text>{item.content}</Text>
+                    <Text size={16} bold>
+                      {item.title}
+                    </Text>
+                    <Text size={13} bold color="gray">
+                      {item.content}
+                    </Text>
+                    <View
+                      style={{
+                        width: "100%",
+                        flexDirection: "row",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <Text muted size={10}>
+                        {moment(item.createdAt).format("MMMM DD , h.mm a")}
+                      </Text>
+                    </View>
                   </View>
                 )}
                 keyExtractor={(item) => item.title}
               />
             </View>
-          </View>
-          {this.state.user?.type === "admin" && (
-            <View style={{ alignItems: "center" }}>
-              <Button
-                round
-                size="small"
-                color="red"
-                onPress={() => this.onCreate()}
+            {this.state.user?.type === "admin" && (
+              <View
+                style={{
+                  alignItems: "center",
+                  position: "relative",
+                  bottom: 45,
+                }}
               >
-                New Notice
-              </Button>
-            </View>
-          )}
-          {/* </View> */}
+                <Button
+                  round
+                  size="small"
+                  color="red"
+                  onPress={() => this.onCreate()}
+                >
+                  New Notice
+                </Button>
+              </View>
+            )}
+          </View>
           {/* </ScrollView> */}
         </View>
       </ImageBackground>
@@ -121,11 +147,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 20,
   },
-  // innerContainer: {
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   paddingVertical: 50,
-  // },
+  innerContainer: {
+    // alignItems: "center",
+    justifyContent: "center",
+    // paddingBottom: 50,
+  },
   image: {
     // flex: 1,
     width: "100%",
@@ -135,11 +161,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   content: {
-    width: "80%",
+    // width: "80%",
     // marginTop: 15,
     // alignItems: "center",
-    // justifyContent: "center",
+    // justifyContent: "space-around",
     padding: 20,
+    marginBottom: 30,
   },
   row: {
     flexDirection: "row",

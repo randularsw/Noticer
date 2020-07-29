@@ -31,6 +31,7 @@ class AddNotice extends Component {
           notices: firebase.firestore.FieldValue.arrayUnion({
             title: this.state.title,
             content: this.state.content,
+            createdAt: Date.now(),
           }),
         })
         .then((data) => {
