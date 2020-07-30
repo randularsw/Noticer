@@ -8,7 +8,9 @@ import {
   ImageBackground,
   Image,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
+import { color } from "react-native-reanimated";
 
 class Login extends Component {
   state = {
@@ -23,6 +25,23 @@ class Login extends Component {
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
         this.props.navigation.navigate("Notices");
+      })
+      .catch((err) => {
+        ToastAndroid.showWithGravityAndOffset(
+          err.code === "auth/user-not-found"
+            ? "Not a registered email address. Please register first."
+            : err.code === "auth/invalid-email"
+            ? "The email address is invalid"
+            : err.code === "auth/wrong-password"
+            ? "The email address and password does't match."
+            : err.code === "auth/too-many-requests"
+            ? "Too many attempts. Please try again later."
+            : "Error login! Please try again.",
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+          0,
+          300
+        );
       });
   }
 
