@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 50,
+    marginTop: 40,
   },
   image: {
     // flex: 1,

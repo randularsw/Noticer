@@ -79,7 +79,6 @@ class AddNotice extends Component {
           <ScrollView>
             <View style={styles.innerContainer}>
               <View style={styles.content}>
-                <Text>Admin</Text>
                 <Input
                   borderless
                   bgColor="#dbdbdb"
@@ -138,6 +137,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 50,
+    marginTop: 40,
   },
   image: {
     // flex: 1,

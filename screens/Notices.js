@@ -75,12 +75,23 @@ class Notices extends Component {
           <View style={styles.innerContainer}>
             <View style={styles.content}>
               <FlatList
+                inverted
                 data={this.state.workplace?.notices}
+                ListEmptyComponent={
+                  <View
+                    style={{
+                      alignItems: "center",
+                      padding: 20,
+                    }}
+                  >
+                    <Text>No notices published yet</Text>
+                  </View>
+                }
                 renderItem={({ item }) => (
                   <View
                     style={{
                       alignItems: "flex-start",
-                      paddingVertical: 10,
+                      padding: 10,
                     }}
                   >
                     <Text size={16} bold>
@@ -163,10 +174,10 @@ const styles = StyleSheet.create({
   },
   content: {
     // width: "80%",
-    // marginTop: 15,
+    marginTop: 15,
     // alignItems: "center",
     // justifyContent: "space-around",
-    padding: 20,
+    padding: 5,
     marginBottom: 30,
   },
   row: {
