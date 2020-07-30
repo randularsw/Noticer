@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 import { Button, Text, Input, Icon } from "galio-framework";
 import { useNavigation } from "@react-navigation/native";
@@ -16,24 +17,42 @@ class Home extends Component {
     ref: "",
   };
 
-  async onJoin() {
+  onJoin() {
+    if (this.state.ref === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter a workplace reference code",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
     firebase
       .firestore()
       .collection("workplaces")
       .where("ref", "==", this.state.ref)
       .get()
       .then((snapshot) => {
-        if (snapshot.size == 1) {
-          const workplaces = [];
-          snapshot.forEach((d) => {
-            const data = d.data();
-            data.id = d.id;
-            workplaces.push(data);
-          });
-          this.props.navigation.navigate("Join", {
-            workplace: workplaces[0],
-          });
+        if (snapshot.empty) {
+          ToastAndroid.showWithGravityAndOffset(
+            "Invalid reference code. Please try again",
+            ToastAndroid.SHORT,
+            ToastAndroid.TOP,
+            0,
+            300
+          );
+          return;
         }
+        const workplaces = [];
+        snapshot.forEach((d) => {
+          const data = d.data();
+          data.id = d.id;
+          workplaces.push(data);
+        });
+        this.props.navigation.navigate("Join", {
+          workplace: workplaces[0],
+        });
         return false;
       });
   }

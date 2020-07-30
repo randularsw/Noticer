@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Image,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 
 class Join extends Component {
@@ -24,28 +25,71 @@ class Join extends Component {
   }
 
   onJoin = async () => {
-    try {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(async (userData) => {
-          if (userData) {
-            let userRef = await firebase
-              .firestore()
-              .collection("users")
-              .doc(userData.user.uid);
-            userRef.set({
-              name: this.state.name,
-              email: this.state.email,
-              type: "user",
-              workplaceId: this.state.workplace.id,
-            });
-            this.props.navigation.navigate("Notices");
-          }
-        });
-    } catch (err) {
-      console.log(err);
+    if (this.state.name === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter your full name",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
     }
+    if (this.state.email === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter your email address",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
+    if (this.state.password === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter a password",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(async (userData) => {
+        if (userData) {
+          let userRef = await firebase
+            .firestore()
+            .collection("users")
+            .doc(userData.user.uid);
+          userRef.set({
+            name: this.state.name,
+            email: this.state.email,
+            type: "user",
+            workplaceId: this.state.workplace.id,
+          });
+          this.props.navigation.navigate("Notices");
+        }
+      })
+      .catch((err) => {
+        ToastAndroid.showWithGravityAndOffset(
+          err.code === "auth/email-already-in-use"
+            ? "Email already in use."
+            : err.code === "auth/invalid-email"
+            ? "The email address is invalid"
+            : err.code === "auth/weak-password"
+            ? "Password must contain at least 6 charactors"
+            : err.code === "auth/too-many-requests"
+            ? "Too many attempts. Please try again later."
+            : "Something is wrong! Please try again.",
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+          0,
+          300
+        );
+      });
   };
 
   render() {

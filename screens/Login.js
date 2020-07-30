@@ -20,6 +20,26 @@ class Login extends Component {
   componentDidMount() {}
 
   onLogin() {
+    if (this.state.email === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter your email address",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
+    if (this.state.password === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter your password",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
     firebase
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -31,12 +51,12 @@ class Login extends Component {
           err.code === "auth/user-not-found"
             ? "Not a registered email address. Please register first."
             : err.code === "auth/invalid-email"
-            ? "The email address is invalid"
+            ? "Please enter a valid email address"
             : err.code === "auth/wrong-password"
             ? "The email address and password does't match."
             : err.code === "auth/too-many-requests"
             ? "Too many attempts. Please try again later."
-            : "Error login! Please try again.",
+            : "Something is wrong! Please try again.",
           ToastAndroid.SHORT,
           ToastAndroid.TOP,
           0,

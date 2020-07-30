@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Image,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 
 class AddNotice extends Component {
@@ -22,25 +23,49 @@ class AddNotice extends Component {
   }
 
   onSend = async () => {
-    try {
-      await firebase
-        .firestore()
-        .collection("workplaces")
-        .doc(this.state.workplaceId)
-        .update({
-          notices: firebase.firestore.FieldValue.arrayUnion({
-            title: this.state.title,
-            content: this.state.content,
-            createdAt: Date.now(),
-          }),
-        })
-        .then((data) => {
-          //
-        });
-      this.props.navigation.navigate("Notices");
-    } catch (err) {
-      console.log(err);
+    if (this.state.title === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter the notice title",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
     }
+    if (this.state.content === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter the notice content",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
+    await firebase
+      .firestore()
+      .collection("workplaces")
+      .doc(this.state.workplaceId)
+      .update({
+        notices: firebase.firestore.FieldValue.arrayUnion({
+          title: this.state.title,
+          content: this.state.content,
+          createdAt: Date.now(),
+        }),
+      })
+      .then((data) => {
+        this.props.navigation.navigate("Notices");
+      })
+      .catch((err) => {
+        ToastAndroid.showWithGravityAndOffset(
+          "Something is wrong! Please try again.",
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+          0,
+          300
+        );
+      });
   };
 
   render() {

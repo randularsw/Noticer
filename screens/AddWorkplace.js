@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Image,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 
 class AddWorkplace extends Component {
@@ -16,7 +17,7 @@ class AddWorkplace extends Component {
     name: "",
     email: "",
     password: "",
-    workplaceId: "",
+    // workplaceId: "",
     ref: "",
   };
   componentDidMount() {
@@ -45,41 +46,103 @@ class AddWorkplace extends Component {
   }
 
   onCreate = async () => {
-    try {
-      await firebase
-        .firestore()
-        .collection("workplaces")
-        .add({
-          workplaceName: this.state.workplaceName,
-          ref: this.state.ref,
-          notices: [],
-        })
-        .then((data) => {
-          const workplaceId = data.id;
-          this.setState({ workplaceId });
-        });
-      await firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(async (userData) => {
-          if (userData) {
-            let userRef = await firebase
-              .firestore()
-              .collection("users")
-              .doc(userData.user.uid);
-            userRef.set({
-              name: this.state.name,
-              email: this.state.email,
-              type: "admin",
-              workplaceId: this.state.workplaceId,
-            });
-          }
-        });
-      this.props.navigation.navigate("Notices");
-    } catch (err) {
-      console.log(err);
+    if (this.state.workplaceName === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter the workplace name",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
     }
+    if (this.state.name === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter your full name",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
+    if (this.state.email === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter your email address",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
+    if (this.state.password === "") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Please enter a password",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        300
+      );
+      return;
+    }
+    this.createWorkplace();
   };
+
+  createWorkplace() {
+    firebase
+      .firestore()
+      .collection("workplaces")
+      .add({
+        workplaceName: this.state.workplaceName,
+        ref: this.state.ref,
+        notices: [],
+      })
+      .then((data) => {
+        this.createAdmin(data.id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  createAdmin(workplaceId) {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(async (userData) => {
+        if (userData) {
+          let userRef = await firebase
+            .firestore()
+            .collection("users")
+            .doc(userData.user.uid);
+          userRef.set({
+            name: this.state.name,
+            email: this.state.email,
+            type: "admin",
+            workplaceId: workplaceId,
+          });
+        }
+        this.props.navigation.navigate("Notices");
+      })
+      .catch((err) => {
+        ToastAndroid.showWithGravityAndOffset(
+          err.code === "auth/email-already-in-use"
+            ? "Email already in use."
+            : err.code === "auth/invalid-email"
+            ? "The email address is invalid"
+            : err.code === "auth/weak-password"
+            ? "Password must contain at least 6 charactors"
+            : err.code === "auth/too-many-requests"
+            ? "Too many attempts. Please try again later."
+            : "Something is wrong! Please try again.",
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+          0,
+          300
+        );
+      });
+  }
 
   render() {
     const { navigation } = this.props;
