@@ -64,12 +64,15 @@ class App extends Component {
             />
             <Stack.Screen name="Add Workplace" component={AddWorkplace} />
             <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen
+              name="Profile"
+              component={this.state.user ? Profile : Home}
+            />
             <Stack.Screen name="Join" component={Join} />
 
             <Stack.Screen
               name="Notices"
-              component={Notices}
+              component={this.state.user ? Notices : Home}
               options={{
                 headerLeft: null,
                 headerRight: () => <ProfileLink user={this.state.user} />,
@@ -78,7 +81,10 @@ class App extends Component {
                 },
               }}
             />
-            <Stack.Screen name="Add Notice" component={AddNotice} />
+            <Stack.Screen
+              name="Add Notice"
+              component={this.state.user.type === "admin" ? AddNotice : Home}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </>
