@@ -2,7 +2,13 @@
 
 import React, { Component } from "react";
 import firebase from "./firebase";
-import { View, YellowBox, ImageBackground, StyleSheet } from "react-native";
+import {
+  View,
+  YellowBox,
+  ImageBackground,
+  StyleSheet,
+  AsyncStorage,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "./screens/Home";
@@ -21,16 +27,13 @@ class App extends Component {
   state = {
     user: {},
   };
-  componentDidMount() {
+  async componentDidMount() {
     YellowBox.ignoreWarnings(["Setting a timer"]);
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.getUser(user?.uid);
-        // console.log("User");
-      } else {
-        // console.log("Anonymous");
-      }
+        console.log("uid", user.uid);
+      } else console.log("no user");
     });
   }
 
@@ -51,8 +54,14 @@ class App extends Component {
     return (
       <>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" component={Home} />
+          <Stack.Navigator
+            initialRouteName={this.state.user ? "Notices" : "Home"}
+          >
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen name="Add Workplace" component={AddWorkplace} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Profile" component={Profile} />
@@ -62,6 +71,7 @@ class App extends Component {
               name="Notices"
               component={Notices}
               options={{
+                headerLeft: null,
                 headerRight: () => <ProfileLink user={this.state.user} />,
                 headerRightContainerStyle: {
                   paddingRight: 15,

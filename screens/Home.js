@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ToastAndroid,
+  AsyncStorage,
 } from "react-native";
 import { Button, Text, Input, Icon } from "galio-framework";
 import { useNavigation } from "@react-navigation/native";
@@ -16,6 +17,8 @@ class Home extends Component {
   state = {
     ref: "",
   };
+
+  async componentDidMount() {}
 
   onJoin() {
     if (this.state.ref === "") {
@@ -89,7 +92,7 @@ class Home extends Component {
                 <Button
                   round
                   size="small"
-                  color="red"
+                  color="#ce2039"
                   onPress={() => this.onJoin()}
                 >
                   Join
@@ -112,7 +115,7 @@ class Home extends Component {
               <Button
                 round
                 size="small"
-                color="red"
+                color="#ce2039"
                 onPress={() => this.props.navigation.navigate("Login")}
               >
                 Login
