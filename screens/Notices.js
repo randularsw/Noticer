@@ -15,7 +15,7 @@ import {
 import moment from "moment";
 
 class Notices extends Component {
-  state = { loading: true };
+  state = { loading: true, workplace: {} };
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -47,6 +47,7 @@ class Notices extends Component {
         const data = doc.data();
         data.id = doc.id;
         // console.log(data);
+        data.notices.reverse();
         this.setState({ workplace: data, loading: false });
       });
   }
@@ -56,13 +57,6 @@ class Notices extends Component {
       workplaceId: this.state.workplace?.id,
     });
   };
-
-  appendLeadingZeroes(n) {
-    if (n <= 9) {
-      return "0" + n;
-    }
-    return n;
-  }
 
   render() {
     const { navigation } = this.props;
@@ -139,7 +133,7 @@ class Notices extends Component {
                 <Button
                   round
                   size="small"
-                  color="red"
+                  color="#ce2039"
                   onPress={() => this.onCreate()}
                 >
                   New Notice
