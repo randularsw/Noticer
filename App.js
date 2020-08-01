@@ -55,7 +55,7 @@ class App extends Component {
       <>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName={this.state.user ? "Notices" : "Home"}
+            initialRouteName={this.state.user.name ? "Notices" : "Home"}
           >
             <Stack.Screen
               name="Home"

@@ -9,12 +9,14 @@ import {
   Image,
   ScrollView,
   Clipboard,
+  ActivityIndicator,
 } from "react-native";
 
 class Profile extends Component {
   state = {
     user: {},
     workplace: {},
+    loading: true,
   };
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -47,7 +49,7 @@ class Profile extends Component {
       .get()
       .then((doc) => {
         const data = doc.data();
-        this.setState({ workplace: data });
+        this.setState({ workplace: data, loading: false });
       });
   }
 
@@ -64,65 +66,80 @@ class Profile extends Component {
         style={styles.image}
       >
         <View style={styles.container}>
-          <ScrollView>
-            <View style={styles.innerContainer}>
-              {this.state.user?.type == "admin" && (
-                <>
-                  <View style={[styles.content, styles.row]}>
-                    <Text muted style={{ marginTop: 4, marginRight: 5 }}>
-                      Admin
-                    </Text>
-                    <Text size={20}>{this.state.workplace?.workplaceName}</Text>
-                  </View>
-                  <View style={[styles.content, styles.row]}>
-                    <Text muted style={{ marginTop: 4, marginRight: 10 }}>
-                      Reference Number
-                    </Text>
-                    <Text size={20}>{this.state.workplace?.ref}</Text>
-                  </View>
+          {this.state.loading && (
+            <View
+              style={{
+                marginTop: 250,
+              }}
+            >
+              <ActivityIndicator size="large" color="#ce2039" />
+            </View>
+          )}
+          {!this.state.loading && (
+            <ScrollView>
+              <View style={styles.innerContainer}>
+                {this.state.user?.type == "admin" && (
+                  <>
+                    <View style={[styles.content, styles.row]}>
+                      <Text muted style={{ marginTop: 4, marginRight: 5 }}>
+                        Admin
+                      </Text>
+                      <Text size={20}>
+                        {this.state.workplace?.workplaceName}
+                      </Text>
+                    </View>
+                    <View style={[styles.content, styles.row]}>
+                      <Text muted style={{ marginTop: 4, marginRight: 10 }}>
+                        Reference Number
+                      </Text>
+                      <Text size={20}>{this.state.workplace?.ref}</Text>
+                    </View>
+                    <Button
+                      round
+                      size="small"
+                      color="red"
+                      onPress={() => {
+                        Clipboard.setString(this.state.workplace?.ref);
+                      }}
+                    >
+                      Copy
+                    </Button>
+                  </>
+                )}
+                {this.state.user?.type == "user" && (
+                  <>
+                    <View style={[styles.content, styles.row]}>
+                      <Text muted style={{ marginTop: 4, marginRight: 5 }}>
+                        User
+                      </Text>
+                      <Text size={20}>
+                        {this.state.workplace?.workplaceName}
+                      </Text>
+                    </View>
+                  </>
+                )}
+                <View style={[styles.content, { marginTop: 150 }]}>
+                  <Text size={12} muted>
+                    FullName
+                  </Text>
+                  <Text size={16}>{this.state.user?.name}</Text>
+                  <Text size={12} style={{ marginTop: 30 }} muted>
+                    Email
+                  </Text>
+                  <Text size={16}>{this.state.user?.email}</Text>
                   <Button
+                    style={{ marginTop: 30 }}
                     round
                     size="small"
                     color="red"
-                    onPress={() => {
-                      Clipboard.setString(this.state.workplace?.ref);
-                    }}
+                    onPress={() => this.onLogout()}
                   >
-                    Copy
+                    Logout
                   </Button>
-                </>
-              )}
-              {this.state.user?.type == "user" && (
-                <>
-                  <View style={[styles.content, styles.row]}>
-                    <Text muted style={{ marginTop: 4, marginRight: 5 }}>
-                      User
-                    </Text>
-                    <Text size={20}>{this.state.workplace?.workplaceName}</Text>
-                  </View>
-                </>
-              )}
-              <View style={[styles.content, { marginTop: 150 }]}>
-                <Text size={12} muted>
-                  FullName
-                </Text>
-                <Text size={16}>{this.state.user?.name}</Text>
-                <Text size={12} style={{ marginTop: 30 }} muted>
-                  Email
-                </Text>
-                <Text size={16}>{this.state.user?.email}</Text>
-                <Button
-                  style={{ marginTop: 30 }}
-                  round
-                  size="small"
-                  color="red"
-                  onPress={() => this.onLogout()}
-                >
-                  Logout
-                </Button>
+                </View>
               </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          )}
         </View>
       </ImageBackground>
     );

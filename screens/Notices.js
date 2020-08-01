@@ -10,11 +10,12 @@ import {
   ScrollView,
   FlatList,
   ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import moment from "moment";
 
 class Notices extends Component {
-  state = {};
+  state = { loading: true };
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -46,7 +47,7 @@ class Notices extends Component {
         const data = doc.data();
         data.id = doc.id;
         // console.log(data);
-        this.setState({ workplace: data });
+        this.setState({ workplace: data, loading: false });
       });
   }
 
@@ -74,49 +75,60 @@ class Notices extends Component {
           {/* <ScrollView> */}
           <View style={styles.innerContainer}>
             <View style={styles.content}>
-              <FlatList
-                inverted
-                data={this.state.workplace?.notices}
-                ListEmptyComponent={
-                  <View
-                    style={{
-                      alignItems: "center",
-                      padding: 20,
-                    }}
-                  >
-                    <Text>No notices published yet</Text>
-                  </View>
-                }
-                renderItem={({ item }) => (
-                  <View
-                    style={{
-                      alignItems: "flex-start",
-                      padding: 10,
-                    }}
-                  >
-                    <Text size={16} bold>
-                      {item.title}
-                    </Text>
-                    <Text size={13} bold color="gray">
-                      {item.content}
-                    </Text>
+              {this.state.loading && (
+                <View
+                  style={{
+                    marginTop: 250,
+                  }}
+                >
+                  <ActivityIndicator size="large" color="#ce2039" />
+                </View>
+              )}
+              {!this.state.loading && (
+                <FlatList
+                  inverted
+                  data={this.state.workplace?.notices}
+                  ListEmptyComponent={
                     <View
                       style={{
-                        width: "100%",
-                        flexDirection: "row",
-                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        padding: 20,
                       }}
                     >
-                      <Text muted size={10}>
-                        {moment(item.createdAt).format("MMMM DD , h.mm a")}
-                      </Text>
+                      <Text>No notices published yet</Text>
                     </View>
-                  </View>
-                )}
-                keyExtractor={(item) => item.title}
-              />
+                  }
+                  renderItem={({ item }) => (
+                    <View
+                      style={{
+                        alignItems: "flex-start",
+                        padding: 10,
+                      }}
+                    >
+                      <Text size={16} bold>
+                        {item.title}
+                      </Text>
+                      <Text size={13} bold color="gray">
+                        {item.content}
+                      </Text>
+                      <View
+                        style={{
+                          width: "100%",
+                          flexDirection: "row",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Text muted size={10}>
+                          {moment(item.createdAt).format("MMMM DD , h.mm a")}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                  keyExtractor={(item) => item.title}
+                />
+              )}
             </View>
-            {this.state.user?.type === "admin" && (
+            {this.state.user?.type === "admin" && !this.state.loading && (
               <View
                 style={{
                   alignItems: "center",
@@ -176,7 +188,7 @@ const styles = StyleSheet.create({
     // width: "80%",
     marginTop: 15,
     // alignItems: "center",
-    // justifyContent: "space-around",
+    // justifyContent: "center",
     padding: 5,
     marginBottom: 30,
   },
