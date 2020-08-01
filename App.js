@@ -27,14 +27,23 @@ class App extends Component {
   state = {
     user: {},
   };
-  async componentDidMount() {
+  componentDidMount() {
     YellowBox.ignoreWarnings(["Setting a timer"]);
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        console.log("firebase", user.uid);
         this.getUser(user?.uid);
-        console.log("uid", user.uid);
-      } else console.log("no user");
+      }
     });
+  }
+
+  async checkUser() {
+    const value = await AsyncStorage.getItem("uid");
+    if (value !== null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   getUser(uid) {
@@ -45,7 +54,9 @@ class App extends Component {
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
-          this.setState({ user: snapshot.data() });
+          const user = snapshot.data();
+          user.id = snapshot.id;
+          this.setState({ user });
         }
       });
   }
@@ -55,7 +66,7 @@ class App extends Component {
       <>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName={this.state.user.name ? "Notices" : "Home"}
+            initialRouteName={this.checkUser() ? "Notices" : "Home"}
           >
             <Stack.Screen
               name="Home"

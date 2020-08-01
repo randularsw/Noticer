@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
   ToastAndroid,
+  AsyncStorage,
 } from "react-native";
 import { color } from "react-native-reanimated";
 
@@ -43,7 +44,8 @@ class Login extends Component {
     firebase
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then((res) => {
+      .then(async (res) => {
+        await AsyncStorage.setItem("uid", res.user.uid);
         this.props.navigation.navigate("Notices");
       })
       .catch((err) => {
