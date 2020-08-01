@@ -122,8 +122,8 @@ class AddWorkplace extends Component {
             type: "admin",
             workplaceId: workplaceId,
           });
+          this.props.navigation.navigate("Notices");
         }
-        this.props.navigation.navigate("Notices");
       })
       .catch((err) => {
         ToastAndroid.showWithGravityAndOffset(
@@ -204,7 +204,7 @@ class AddWorkplace extends Component {
                 <Button
                   round
                   size="small"
-                  color="red"
+                  color="#ce2039"
                   onPress={() => this.onCreate()}
                 >
                   Create

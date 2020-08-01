@@ -9,7 +9,6 @@ import {
   Image,
   ScrollView,
   ToastAndroid,
-  AsyncStorage,
 } from "react-native";
 import { color } from "react-native-reanimated";
 
@@ -45,7 +44,6 @@ class Login extends Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(async (res) => {
-        await AsyncStorage.setItem("uid", res.user.uid);
         this.props.navigation.navigate("Notices");
       })
       .catch((err) => {
@@ -104,7 +102,7 @@ class Login extends Component {
                 <Button
                   round
                   size="small"
-                  color="red"
+                  color="#ce2039"
                   onPress={() => this.onLogin()}
                 >
                   Login

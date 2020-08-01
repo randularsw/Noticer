@@ -97,7 +97,7 @@ class Profile extends Component {
                     <Button
                       round
                       size="small"
-                      color="red"
+                      color="#ce2039"
                       onPress={() => {
                         Clipboard.setString(this.state.workplace?.ref);
                       }}
@@ -131,7 +131,7 @@ class Profile extends Component {
                     style={{ marginTop: 30 }}
                     round
                     size="small"
-                    color="red"
+                    color="#ce2039"
                     onPress={() => this.onLogout()}
                   >
                     Logout

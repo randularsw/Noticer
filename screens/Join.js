@@ -142,7 +142,7 @@ class Join extends Component {
                 <Button
                   round
                   size="small"
-                  color="red"
+                  color="#ce2039"
                   onPress={() => this.onJoin()}
                 >
                   Join

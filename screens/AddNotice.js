@@ -55,7 +55,7 @@ class AddNotice extends Component {
         }),
       })
       .then((data) => {
-        this.props.navigation.navigate("Notices");
+        this.props.navigation.push("Notices");
       })
       .catch((err) => {
         ToastAndroid.showWithGravityAndOffset(
@@ -102,7 +102,7 @@ class AddNotice extends Component {
                 <Button
                   round
                   size="small"
-                  color="red"
+                  color="#ce2039"
                   onPress={() => this.onSend()}
                 >
                   Send
